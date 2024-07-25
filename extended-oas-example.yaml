@@ -1,0 +1,59 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Extended Petstore
+  license:
+    name: MIT
+servers:
+  - url: http://petstore.swagger.io/v1
+paths:
+  /pets:
+    get:
+      summary: List all pets
+      operationId: listPets
+      x-3scale-operation:
+        mappingRule:
+          metricMethodRef: "metric01"
+          increment: 2
+          last: true
+      responses:
+        '200':
+          description: A paged array of pets
+x-3scale-product:
+  metrics:
+    metric01:
+      friendlyName: "My Metric 01"
+      unit: "hits"
+      description: "This is a custom metric"
+  policies:
+    - name: "myPolicy1"
+      version: "0.1"
+      enabled: true
+      configuration:
+        http_proxy: http://example.com
+        https_proxy: https://example.com
+    - name: "myPolicy2"
+      version: "2.0"
+      enabled: true
+      configurationRef:
+        name: "dummy-policy-config-secret"
+        namespace: "3scale-test"
+  applicationPlans:
+    plan01:
+      name: "My Plan 01"
+      appsRequireApproval: false
+      trialPeriod: 3
+      setupFee: "3.00"
+      costMonth: "2.00"
+      pricingRules:
+        - from: 1
+          to: 100
+          pricePerUnit: "0.05"
+          metricMethodRef:
+            systemName: "metric01"
+      limits:
+        - period: "week"
+          value: 100
+          metricMethodRef:
+            systemName: "hits"
+            backend: "Extended_Petstore"
