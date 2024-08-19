@@ -24,7 +24,7 @@ x-3scale-product:
     metric01:
       friendlyName: "My Metric 01"
       unit: "hits"
-      description: "This is a custom metric"
+      description: "New description"
   policies:
     - name: "myPolicy1"
       version: "0.1"
